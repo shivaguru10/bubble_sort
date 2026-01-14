@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Math - Cognitive Assessment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #a855f7;
+            --primary-dark: #7c3aed;
+            --secondary: #6366f1;
+            --accent: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0a0a1a;
+            --bg-medium: #12122a;
+            --bg-light: #1a1a3e;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 0 60px rgba(168, 85, 247, 0.15);
+        }
+        
+        /* Light Theme */
+        body.light-theme {
+            --bg-dark: #f8fafc;
+            --bg-medium: #f1f5f9;
+            --bg-light: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --glass-bg: rgba(0, 0, 0, 0.02);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --shadow-glow: 0 0 60px rgba(168, 85, 247, 0.1);
+        }
+        
+        body.light-theme {
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.03) 0%, transparent 70%);
+        }
+        
+        body.light-theme::before {
+            background: 
+                linear-gradient(90deg, transparent 0%, transparent 50%, rgba(168, 85, 247, 0.02) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 0%, transparent 50%, rgba(99, 102, 241, 0.02) 50%, transparent 51%);
+            background-size: 60px 60px;
+        }
+        
+        body.light-theme .logo {
+            background: linear-gradient(135deg, #1e293b 0%, #a855f7 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        body.light-theme .bubble {
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2),
+                        inset 0 -5px 20px rgba(0, 0, 0, 0.15),
+                        inset 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        body.light-theme .instructions {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        
+        body.light-theme .game-header {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.02), rgba(168, 85, 247, 0.03));
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        
+        body.light-theme .stat-item {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        
+        body.light-theme .result-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(168, 85, 247, 0.05));
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.light-theme .particle {
+            opacity: 0.15;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 70%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 0%, transparent 50%, rgba(168, 85, 247, 0.03) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 0%, transparent 50%, rgba(99, 102, 241, 0.03) 50%, transparent 51%);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Floating particles animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Start Screen */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(168, 85, 247, 0.4); }
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a855f7 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            text-shadow: 0 0 80px rgba(168, 85, 247, 0.5);
+            animation: logoGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, var(--glass-bg), rgba(168, 85, 247, 0.05));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 35px 40px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                var(--shadow-glow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .instructions:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 35px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 80px rgba(168, 85, 247, 0.2);
+        }
+
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .instructions p {
+            color: #e2e8f0;
+            line-height: 2;
+            font-size: 1rem;
+        }
+        
+        .instructions strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .instruction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .instruction-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 20px 70px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 15px 40px rgba(168, 85, 247, 0.4),
+                0 0 0 0 rgba(168, 85, 247, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .start-btn:hover::before {
+            left: 100%;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 25px 60px rgba(168, 85, 247, 0.5),
+                0 0 0 4px rgba(168, 85, 247, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .start-btn:active {
+            transform: translateY(-2px) scale(1.02);
+            transition: all 0.1s ease;
+        }
+        
+        .btn-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Countdown Screen */
+        .countdown-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .countdown-ring {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            border-right-color: var(--secondary);
+            animation: spin 2s linear infinite;
+        }
+        
+        .countdown-ring::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-bottom-color: var(--accent);
+            border-left-color: var(--primary);
+            animation: spin 3s linear infinite reverse;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .countdown-number {
+            font-size: 12rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: countdownPulse 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            text-shadow: 0 0 100px rgba(168, 85, 247, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .countdown-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        @keyframes countdownPulse {
+            0% { transform: scale(0.3); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.1); filter: blur(0); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            min-height: 100vh;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(168, 85, 247, 0.03));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .exit-btn {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+            color: var(--danger);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            padding: 12px 28px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exit-btn:hover {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            border-color: var(--danger);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .timer-section {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+        
+        .timer-bar-container {
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
+            border-radius: 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .timer-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #10b981, var(--primary));
+            border-radius: 20px;
+            transition: width 0.1s linear;
+            position: relative;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+        }
+        
+        .timer-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .timer-bar.warning {
+            background: linear-gradient(90deg, var(--warning), #f97316, var(--danger));
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            animation: timerPulse 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.8); }
+        }
+
+        .timer-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .timer-text span {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .timer-icon {
+            font-size: 1.2rem;
+        }
+
+        .question-info {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .instruction-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-weight: 500;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(34, 197, 94, 0.05));
+            border-radius: 50px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            display: inline-block;
+        }
+        
+        .instruction-text strong {
+            color: var(--accent);
+        }
+
+        .bubbles-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            padding: 30px;
+            perspective: 1000px;
+        }
+
+        .bubble {
+            width: 200px;
+            height: 130px;
+            background: linear-gradient(145deg, #4f94f8 0%, #3b82f6 25%, #1d4ed8 60%, #1e40af 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 20px 50px rgba(59, 130, 246, 0.35),
+                0 10px 20px rgba(0, 0, 0, 0.2),
+                inset 0 -8px 30px rgba(0, 0, 0, 0.25),
+                inset 0 8px 25px rgba(255, 255, 255, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            animation: bubbleFloat 3s ease-in-out infinite;
+        }
+        
+        .bubble:nth-child(1) { animation-delay: 0s; }
+        .bubble:nth-child(2) { animation-delay: 0.5s; }
+        .bubble:nth-child(3) { animation-delay: 1s; }
+        
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateY(0) rotateX(0deg); }
+            50% { transform: translateY(-8px) rotateX(2deg); }
+        }
+
+        .bubble::before {
+            content: '';
+            position: absolute;
+            top: 12%;
+            left: 18%;
+            width: 35%;
+            height: 25%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+            border-radius: 50%;
+            filter: blur(3px);
+            transition: all 0.4s ease;
+        }
+        
+        .bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            right: 20%;
+            width: 20%;
+            height: 15%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            filter: blur(4px);
+        }
+
+        .bubble:hover:not(.selected):not(.disabled) {
+            transform: translateY(-15px) scale(1.1) rotateX(5deg);
+            box-shadow: 
+                0 35px 70px rgba(59, 130, 246, 0.5),
+                0 15px 30px rgba(0, 0, 0, 0.3),
+                inset 0 -8px 30px rgba(0, 0, 0, 0.25),
+                inset 0 8px 25px rgba(255, 255, 255, 0.2),
+                0 0 50px rgba(59, 130, 246, 0.3);
+            animation: none;
+        }
+
+        .bubble.selected {
+            background: linear-gradient(145deg, #34d399 0%, #22c55e 25%, #16a34a 60%, #15803d 100%);
+            box-shadow: 
+                0 20px 50px rgba(34, 197, 94, 0.45),
+                0 10px 20px rgba(0, 0, 0, 0.2),
+                inset 0 -8px 30px rgba(0, 0, 0, 0.25),
+                inset 0 8px 25px rgba(255, 255, 255, 0.2),
+                0 0 40px rgba(34, 197, 94, 0.4);
+            transform: scale(0.92);
+            animation: selectPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes selectPop {
+            0% { transform: scale(1.1); }
+            50% { transform: scale(0.88); }
+            100% { transform: scale(0.92); }
+        }
+
+        .bubble.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(30%);
+            animation: none;
+        }
+
+        .bubble-content {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .bubble:hover:not(.selected):not(.disabled) .bubble-content {
+            transform: scale(1.05);
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bubble-order {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 5px 20px rgba(168, 85, 247, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .bubble.selected .bubble-order {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 10px 25px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            animation: badgePop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+        
+        @keyframes badgePop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .result-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: resultTitleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+        }
+        
+        @keyframes resultTitleIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .result-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            animation: resultTitleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--glass-bg), rgba(168, 85, 247, 0.05));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 70px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 40px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                var(--shadow-glow);
+            animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        @keyframes cardIn {
+            from { transform: translateY(40px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .result-score {
+            font-size: 6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            animation: scoreCount 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+        }
+        
+        @keyframes scoreCount {
+            from { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .result-total {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .result-accuracy {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            padding: 15px 35px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 50px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            display: inline-block;
+        }
+
+        .result-accuracy span {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.6rem;
+        }
+
+        .result-details {
+            display: flex;
+            gap: 50px;
+            margin-top: 35px;
+            padding-top: 35px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .result-detail {
+            text-align: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-detail:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .result-detail-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .result-detail.correct .result-detail-value {
+            background: linear-gradient(135deg, var(--accent), #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .result-detail.wrong .result-detail-value {
+            background: linear-gradient(135deg, var(--danger), #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-detail-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 15px 40px rgba(168, 85, 247, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+        }
+        
+        .restart-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .restart-btn:hover::before {
+            left: 100%;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 25px 60px rgba(168, 85, 247, 0.5),
+                0 0 0 4px rgba(168, 85, 247, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 1px;
+            }
+
+            .bubbles-container {
+                gap: 25px;
+            }
+
+            .bubble {
+                width: 150px;
+                height: 100px;
+            }
+
+            .bubble-content {
+                font-size: 1.5rem;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat-item {
+                padding: 8px 15px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .result-card {
+                padding: 35px 30px;
+            }
+
+            .result-score {
+                font-size: 4.5rem;
+            }
+
+            .result-details {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .instructions {
+                padding: 25px;
+                margin: 0 15px 30px;
+            }
+            
+            .instruction-text {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+            
+            .countdown-number {
+                font-size: 8rem;
+            }
+            
+            .countdown-ring {
+                width: 220px;
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bubble {
+                width: 130px;
+                height: 85px;
+            }
+
+            .bubble-content {
+                font-size: 1.3rem;
+            }
+
+            .instructions {
+                padding: 20px;
+            }
+            
+            .start-btn, .restart-btn {
+                padding: 16px 45px;
+                font-size: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .result-score {
+                font-size: 3.5rem;
+            }
+            
+            .timer-section {
+                padding: 0 15px;
+            }
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(168, 85, 247, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .theme-toggle-track {
+            width: 44px;
+            height: 24px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 50px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .theme-toggle-track {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .theme-toggle-thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        body.light-theme .theme-toggle-thumb {
+            left: 22px;
+        }
+        
+        .theme-toggle-label {
+            display: none;
+        }
+        
+        @media (min-width: 480px) {
+            .theme-toggle-label {
+                display: inline;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Focus states for accessibility */
+        .start-btn:focus, .exit-btn:focus, .restart-btn:focus, .bubble:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.5);
+        }
+        
+        /* Selection highlight */
+        ::selection {
+            background: rgba(168, 85, 247, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-toggle-label" id="themeLabel">Dark</span>
+        <div class="theme-toggle-track">
+            <div class="theme-toggle-thumb" id="themeThumb">🌙</div>
+        </div>
+    </button>
+    
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="brand-badge">🧠 Cognitive Assessment</div>
+            <div class="logo">Bubble Math</div>
+            <div class="subtitle">Ascending Order Challenge</div>
+            
+            <div class="instructions">
+                <h3>📋 How to Play</h3>
+                <div class="instruction-item">
+                    <div class="instruction-icon">🔢</div>
+                    <span>You'll see <strong>3 bubbles</strong> with math expressions</span>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">⬆️</div>
+                    <span>Click bubbles in <strong>ASCENDING ORDER</strong> by result</span>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">⏱️</div>
+                    <span><strong>15 seconds</strong> per question · <strong>24 questions</strong> total</span>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">⭐</div>
+                    <span><strong>1 point</strong> for each correct answer</span>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="startBtn"><span class="btn-icon">▶</span> Start Test</button>
+        </div>
+
+        <!-- Countdown Screen -->
+        <div class="countdown-screen" id="countdownScreen">
+            <div class="countdown-ring"></div>
+            <div class="countdown-number" id="countdownNumber">3</div>
+            <div class="countdown-label">Get Ready</div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <div class="game-header">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Question</div>
+                        <div class="stat-value"><span id="currentQuestion">1</span>/24</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value" id="currentScore">0</div>
+                    </div>
+                </div>
+                <button class="exit-btn" id="exitBtn">✕ Exit Test</button>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer-bar-container">
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+                <div class="timer-text"><span class="timer-icon">⏱️</span> Time Remaining: <span id="timerText">15</span>s</div>
+            </div>
+
+            <div class="question-info">Select bubbles from smallest to largest value</div>
+            <div class="instruction-text">Click in <strong>ascending order</strong> based on the result</div>
+
+            <div class="bubbles-container" id="bubblesContainer">
+                <!-- Bubbles will be generated here -->
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-badge">✅ Assessment Complete</div>
+            <div class="result-title">Test Complete!</div>
+            <div class="result-subtitle">Here's how you performed</div>
+            
+            <div class="result-card">
+                <div class="result-score" id="finalScore">0</div>
+                <div class="result-total">out of <span id="totalQuestions">24</span></div>
+                <div class="result-accuracy">Accuracy: <span id="accuracy">0%</span></div>
+                
+                <div class="result-details">
+                    <div class="result-detail correct">
+                        <div class="result-detail-value" id="correctAnswers">0</div>
+                        <div class="result-detail-label">Correct</div>
+                    </div>
+                    <div class="result-detail wrong">
+                        <div class="result-detail-value" id="wrongAnswers">0</div>
+                        <div class="result-detail-label">Incorrect</div>
+                    </div>
+                    <div class="result-detail">
+                        <div class="result-detail-value" id="skippedAnswers">0</div>
+                        <div class="result-detail-label">Skipped</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="restart-btn" id="restartBtn"><span class="btn-icon">🔄</span> Restart Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+        const themeThumb = document.getElementById('themeThumb');
+        let isDarkTheme = true;
+        
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            document.body.classList.toggle('light-theme', !isDarkTheme);
+            
+            if (isDarkTheme) {
+                themeLabel.textContent = 'Dark';
+                themeThumb.textContent = '🌙';
+            } else {
+                themeLabel.textContent = 'Light';
+                themeThumb.textContent = '☀️';
+            }
+            
+            // Save preference
+            localStorage.setItem('bubbleMathTheme', isDarkTheme ? 'dark' : 'light');
+        }
+        
+        // Load saved theme preference
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('bubbleMathTheme');
+            if (savedTheme === 'light') {
+                isDarkTheme = false;
+                document.body.classList.add('light-theme');
+                themeLabel.textContent = 'Light';
+                themeThumb.textContent = '☀️';
+            }
+        }
+        
+        themeToggle.addEventListener('click', toggleTheme);
+        loadThemePreference();
+        
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const colors = ['#a855f7', '#6366f1', '#22c55e', '#3b82f6'];
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.width = (3 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+        
+        // Game State
+        let currentQuestion = 0;
+        let score = 0;
+        let totalQuestions = 24;
+        let timePerQuestion = 15;
+        let timerInterval = null;
+        let currentTime = timePerQuestion;
+        let selectedBubbles = [];
+        let currentBubbles = [];
+        let questionsAttempted = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let skippedAnswers = 0;
+
+        // DOM Elements
+        const startScreen = document.getElementById('startScreen');
+        const countdownScreen = document.getElementById('countdownScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const startBtn = document.getElementById('startBtn');
+        const exitBtn = document.getElementById('exitBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const countdownNumber = document.getElementById('countdownNumber');
+        const bubblesContainer = document.getElementById('bubblesContainer');
+        const timerBar = document.getElementById('timerBar');
+        const timerText = document.getElementById('timerText');
+        const currentQuestionEl = document.getElementById('currentQuestion');
+        const currentScoreEl = document.getElementById('currentScore');
+
+        // Math Expression Generator
+        function generateExpression() {
+            const operators = ['+', '-', '*', '/'];
+            const operator = operators[Math.floor(Math.random() * operators.length)];
+            let num1, num2, result;
+
+            switch (operator) {
+                case '+':
+                    num1 = Math.floor(Math.random() * 50) + 1;
+                    num2 = Math.floor(Math.random() * 50) + 1;
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    num1 = Math.floor(Math.random() * 50) + 20;
+                    num2 = Math.floor(Math.random() * 20) + 1;
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    num1 = Math.floor(Math.random() * 12) + 2;
+                    num2 = Math.floor(Math.random() * 12) + 2;
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    num2 = Math.floor(Math.random() * 10) + 2;
+                    result = Math.floor(Math.random() * 15) + 2;
+                    num1 = num2 * result;
+                    break;
+            }
+
+            return {
+                expression: `${num1} ${operator} ${num2}`,
+                result: result
+            };
+        }
+
+        function generateUniqueBubbles() {
+            const bubbles = [];
+            const usedResults = new Set();
+
+            while (bubbles.length < 3) {
+                const bubble = generateExpression();
+                if (!usedResults.has(bubble.result)) {
+                    usedResults.add(bubble.result);
+                    bubbles.push(bubble);
+                }
+            }
+
+            return bubbles;
+        }
+
+        // Screen Management
+        function showScreen(screen) {
+            startScreen.classList.add('hidden');
+            countdownScreen.classList.add('hidden');
+            gameScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            
+            screen.classList.remove('hidden');
+            screen.style.display = 'flex';
+        }
+
+        // Countdown
+        function startCountdown() {
+            showScreen(countdownScreen);
+            let count = 3;
+            countdownNumber.textContent = count;
+            const countdownLabel = document.querySelector('.countdown-label');
+
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownNumber.textContent = count;
+                    countdownNumber.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNumber.style.animation = 'countdownPulse 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                    }, 10);
+                } else if (count === 0) {
+                    countdownNumber.textContent = 'Go!';
+                    countdownLabel.textContent = 'Starting...';
+                    countdownNumber.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNumber.style.animation = 'countdownPulse 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                    }, 10);
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownLabel.textContent = 'Get Ready';
+                    startGame();
+                }
+            }, 1000);
+        }
+
+        // Game Logic
+        function startGame() {
+            currentQuestion = 0;
+            score = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            skippedAnswers = 0;
+            questionsAttempted = 0;
+            showScreen(gameScreen);
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (currentQuestion >= totalQuestions) {
+                endGame();
+                return;
+            }
+
+            currentQuestion++;
+            selectedBubbles = [];
+            currentBubbles = generateUniqueBubbles();
+            
+            updateUI();
+            renderBubbles();
+            startTimer();
+        }
+
+        function updateUI() {
+            currentQuestionEl.textContent = currentQuestion;
+            currentScoreEl.textContent = score;
+        }
+
+        function renderBubbles() {
+            bubblesContainer.innerHTML = '';
+            
+            currentBubbles.forEach((bubble, index) => {
+                const bubbleEl = document.createElement('div');
+                bubbleEl.className = 'bubble';
+                bubbleEl.dataset.index = index;
+                bubbleEl.innerHTML = `
+                    <span class="bubble-content">${bubble.expression}</span>
+                    <span class="bubble-order"></span>
+                `;
+                bubbleEl.addEventListener('click', () => handleBubbleClick(index));
+                bubblesContainer.appendChild(bubbleEl);
+            });
+        }
+
+        function handleBubbleClick(index) {
+            const bubbleEl = bubblesContainer.children[index];
+            
+            if (bubbleEl.classList.contains('disabled')) {
+                return;
+            }
+
+            // If already selected, unselect it
+            if (bubbleEl.classList.contains('selected')) {
+                const position = selectedBubbles.indexOf(index);
+                selectedBubbles.splice(position, 1);
+                bubbleEl.classList.remove('selected');
+                bubbleEl.querySelector('.bubble-order').textContent = '';
+                
+                // Update order numbers for remaining selected bubbles
+                selectedBubbles.forEach((bubbleIndex, i) => {
+                    const bubble = bubblesContainer.children[bubbleIndex];
+                    bubble.querySelector('.bubble-order').textContent = i + 1;
+                });
+                return;
+            }
+
+            selectedBubbles.push(index);
+            bubbleEl.classList.add('selected');
+            bubbleEl.querySelector('.bubble-order').textContent = selectedBubbles.length;
+
+            if (selectedBubbles.length === 3) {
+                validateAnswer();
+            }
+        }
+
+        function validateAnswer() {
+            clearInterval(timerInterval);
+            questionsAttempted++;
+
+            // Get the correct order (indices sorted by result ascending)
+            const correctOrder = [...currentBubbles]
+                .map((bubble, index) => ({ index, result: bubble.result }))
+                .sort((a, b) => a.result - b.result)
+                .map(item => item.index);
+
+            // Check if user's selection matches correct order
+            const isCorrect = selectedBubbles.every((selected, i) => selected === correctOrder[i]);
+
+            if (isCorrect) {
+                score++;
+                correctAnswers++;
+            } else {
+                wrongAnswers++;
+            }
+
+            // Brief delay before next question
+            setTimeout(() => {
+                loadNextQuestion();
+            }, 500);
+        }
+
+        function startTimer() {
+            currentTime = timePerQuestion;
+            timerText.textContent = currentTime;
+            timerBar.style.width = '100%';
+            timerBar.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                currentTime -= 0.1;
+                
+                const percentage = (currentTime / timePerQuestion) * 100;
+                timerBar.style.width = `${percentage}%`;
+                
+                if (currentTime <= 5) {
+                    timerBar.classList.add('warning');
+                }
+                
+                timerText.textContent = Math.ceil(currentTime);
+
+                if (currentTime <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 100);
+        }
+
+        function handleTimeout() {
+            questionsAttempted++;
+            skippedAnswers++;
+            
+            // Disable all bubbles
+            Array.from(bubblesContainer.children).forEach(bubble => {
+                bubble.classList.add('disabled');
+            });
+
+            setTimeout(() => {
+                loadNextQuestion();
+            }, 500);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            showScreen(resultScreen);
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('totalQuestions').textContent = questionsAttempted || totalQuestions;
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            document.getElementById('wrongAnswers').textContent = wrongAnswers;
+            document.getElementById('skippedAnswers').textContent = skippedAnswers;
+
+            const accuracyValue = questionsAttempted > 0 
+                ? Math.round((correctAnswers / questionsAttempted) * 100) 
+                : 0;
+            document.getElementById('accuracy').textContent = `${accuracyValue}%`;
+        }
+
+        function exitGame() {
+            clearInterval(timerInterval);
+            endGame();
+        }
+
+        function resetGame() {
+            currentQuestion = 0;
+            score = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            skippedAnswers = 0;
+            questionsAttempted = 0;
+            selectedBubbles = [];
+            currentBubbles = [];
+            showScreen(startScreen);
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', startCountdown);
+        exitBtn.addEventListener('click', exitGame);
+        restartBtn.addEventListener('click', resetGame);
+
+        // Initialize
+        showScreen(startScreen);
+    </script>
+</body>
+</html>

@@ -58,7 +58,7 @@ createParticles();
 let currentQuestion = 0;
 let score = 0;
 let totalQuestions = 24;
-let timePerQuestion = 15;
+let timePerQuestion = 30;
 let timerInterval = null;
 let currentTime = timePerQuestion;
 let selectedBubbles = [];

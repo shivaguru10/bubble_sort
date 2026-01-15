@@ -67,6 +67,7 @@ let questionsAttempted = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
 let skippedAnswers = 0;
+let selectedDifficulty = null;
 
 // DOM Elements
 const startScreen = document.getElementById('startScreen');
@@ -82,9 +83,28 @@ const timerBar = document.getElementById('timerBar');
 const timerText = document.getElementById('timerText');
 const currentQuestionEl = document.getElementById('currentQuestion');
 const currentScoreEl = document.getElementById('currentScore');
+const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+const difficultyDisplay = document.getElementById('difficultyDisplay');
+const difficultyIndicator = document.querySelector('.difficulty-indicator');
 
-// Math Expression Generator
-function generateExpression() {
+// Difficulty Selection
+difficultyBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove selected class from all buttons
+        difficultyBtns.forEach(b => b.classList.remove('selected'));
+        // Add selected class to clicked button
+        btn.classList.add('selected');
+        // Store selected difficulty
+        selectedDifficulty = btn.dataset.difficulty;
+        // Enable start button
+        startBtn.disabled = false;
+    });
+});
+
+// ============================================
+// EASY MODE: Whole numbers only
+// ============================================
+function generateEasyExpression() {
     const operators = ['+', '-', '*', '/'];
     const operator = operators[Math.floor(Math.random() * operators.length)];
     let num1, num2, result;
@@ -118,16 +138,213 @@ function generateExpression() {
     };
 }
 
+// ============================================
+// MEDIUM MODE: Fractions
+// ============================================
+function gcd(a, b) {
+    a = Math.abs(a);
+    b = Math.abs(b);
+    while (b) {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+function simplifyFraction(num, den) {
+    if (den === 0) return { num: 0, den: 1 };
+    const divisor = gcd(num, den);
+    return { num: num / divisor, den: den / divisor };
+}
+
+function formatFraction(num, den) {
+    const simplified = simplifyFraction(num, den);
+    if (simplified.den === 1) {
+        return `${simplified.num}`;
+    }
+    return `(${simplified.num}/${simplified.den})`;
+}
+
+function generateMediumExpression() {
+    const types = ['fraction+fraction', 'fraction+whole', 'whole/whole', 'fraction*whole'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    
+    let expression, result;
+    
+    switch (type) {
+        case 'fraction+fraction': {
+            // (a/b) + (c/d) or (a/b) - (c/d)
+            const ops = ['+', '-'];
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            const num1 = Math.floor(Math.random() * 8) + 1;
+            const den1 = Math.floor(Math.random() * 6) + 2;
+            const num2 = Math.floor(Math.random() * 8) + 1;
+            const den2 = Math.floor(Math.random() * 6) + 2;
+            
+            const frac1 = num1 / den1;
+            const frac2 = num2 / den2;
+            
+            if (op === '+') {
+                result = frac1 + frac2;
+            } else {
+                result = frac1 - frac2;
+            }
+            
+            expression = `${formatFraction(num1, den1)} ${op} ${formatFraction(num2, den2)}`;
+            break;
+        }
+        case 'fraction+whole': {
+            // (a/b) + c or (a/b) - c
+            const ops = ['+', '-'];
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            const num1 = Math.floor(Math.random() * 8) + 1;
+            const den1 = Math.floor(Math.random() * 6) + 2;
+            const whole = Math.floor(Math.random() * 10) + 1;
+            
+            const frac1 = num1 / den1;
+            
+            if (op === '+') {
+                result = frac1 + whole;
+            } else {
+                result = frac1 - whole;
+            }
+            
+            expression = `${formatFraction(num1, den1)} ${op} ${whole}`;
+            break;
+        }
+        case 'whole/whole': {
+            // a / b where result is not whole
+            const num1 = Math.floor(Math.random() * 20) + 5;
+            let den1 = Math.floor(Math.random() * 8) + 2;
+            // Ensure it's not a whole number result
+            while (num1 % den1 === 0) {
+                den1 = Math.floor(Math.random() * 8) + 2;
+            }
+            result = num1 / den1;
+            expression = `${num1} / ${den1}`;
+            break;
+        }
+        case 'fraction*whole': {
+            // (a/b) * c
+            const num1 = Math.floor(Math.random() * 6) + 1;
+            const den1 = Math.floor(Math.random() * 6) + 2;
+            const whole = Math.floor(Math.random() * 10) + 2;
+            
+            result = (num1 / den1) * whole;
+            expression = `${formatFraction(num1, den1)} × ${whole}`;
+            break;
+        }
+    }
+    
+    // Round result to avoid floating point issues in comparison
+    result = Math.round(result * 10000) / 10000;
+    
+    return {
+        expression: expression,
+        result: result
+    };
+}
+
+// ============================================
+// HARD MODE: Square roots
+// ============================================
+function generateHardExpression() {
+    const perfectSquares = [4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144];
+    const types = ['sqrt_only', 'sqrt+num', 'sqrt-num', 'sqrt/num', 'sqrt*num'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    
+    let expression, result;
+    const sqNum = perfectSquares[Math.floor(Math.random() * perfectSquares.length)];
+    const sqrtValue = Math.sqrt(sqNum);
+    
+    switch (type) {
+        case 'sqrt_only': {
+            result = sqrtValue;
+            expression = `√${sqNum}`;
+            break;
+        }
+        case 'sqrt+num': {
+            const addNum = Math.floor(Math.random() * 10) + 1;
+            result = sqrtValue + addNum;
+            expression = `√${sqNum} + ${addNum}`;
+            break;
+        }
+        case 'sqrt-num': {
+            const subNum = Math.floor(Math.random() * Math.floor(sqrtValue)) + 1;
+            result = sqrtValue - subNum;
+            expression = `√${sqNum} - ${subNum}`;
+            break;
+        }
+        case 'sqrt/num': {
+            const divNum = Math.floor(Math.random() * 4) + 2;
+            result = sqrtValue / divNum;
+            expression = `√${sqNum} / ${divNum}`;
+            break;
+        }
+        case 'sqrt*num': {
+            const mulNum = Math.floor(Math.random() * 5) + 2;
+            result = sqrtValue * mulNum;
+            expression = `√${sqNum} × ${mulNum}`;
+            break;
+        }
+    }
+    
+    // Round result to avoid floating point issues
+    result = Math.round(result * 10000) / 10000;
+    
+    return {
+        expression: expression,
+        result: result
+    };
+}
+
+// ============================================
+// Expression Generator based on difficulty
+// ============================================
+function generateExpression() {
+    switch (selectedDifficulty) {
+        case 'easy':
+            return generateEasyExpression();
+        case 'medium':
+            return generateMediumExpression();
+        case 'hard':
+            return generateHardExpression();
+        default:
+            return generateEasyExpression();
+    }
+}
+
 function generateUniqueBubbles() {
     const bubbles = [];
     const usedResults = new Set();
+    const tolerance = 0.001; // For floating point comparison
+    
+    const isResultUsed = (result) => {
+        for (let used of usedResults) {
+            if (Math.abs(used - result) < tolerance) {
+                return true;
+            }
+        }
+        return false;
+    };
 
-    while (bubbles.length < 3) {
+    let attempts = 0;
+    const maxAttempts = 100;
+    
+    while (bubbles.length < 3 && attempts < maxAttempts) {
+        attempts++;
         const bubble = generateExpression();
-        if (!usedResults.has(bubble.result)) {
+        if (!isResultUsed(bubble.result)) {
             usedResults.add(bubble.result);
             bubbles.push(bubble);
         }
+    }
+    
+    // Fallback if we couldn't generate unique bubbles
+    while (bubbles.length < 3) {
+        const bubble = generateExpression();
+        bubbles.push(bubble);
     }
 
     return bubbles;
@@ -182,6 +399,11 @@ function startGame() {
     wrongAnswers = 0;
     skippedAnswers = 0;
     questionsAttempted = 0;
+    
+    // Update difficulty display
+    difficultyDisplay.textContent = selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1);
+    difficultyIndicator.className = 'stat-item difficulty-indicator ' + selectedDifficulty;
+    
     showScreen(gameScreen);
     loadNextQuestion();
 }
@@ -348,6 +570,12 @@ function resetGame() {
     questionsAttempted = 0;
     selectedBubbles = [];
     currentBubbles = [];
+    
+    // Reset difficulty selection
+    selectedDifficulty = null;
+    difficultyBtns.forEach(b => b.classList.remove('selected'));
+    startBtn.disabled = true;
+    
     showScreen(startScreen);
 }
 

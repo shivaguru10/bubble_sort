@@ -291,6 +291,299 @@ body::before {
     flex-shrink: 0;
 }
 
+/* Difficulty Selection */
+.difficulty-section {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.difficulty-label {
+    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.difficulty-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.05) 0%, 
+        rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: inherit;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.difficulty-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        transparent 0%,
+        rgba(255, 255, 255, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.difficulty-btn:hover::before {
+    opacity: 1;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Easy Button */
+.difficulty-btn[data-difficulty="easy"] {
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.difficulty-btn[data-difficulty="easy"]:hover {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 
+        0 12px 32px rgba(34, 197, 94, 0.12),
+        0 0 0 1px rgba(34, 197, 94, 0.1);
+}
+
+.difficulty-btn[data-difficulty="easy"].selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.15) 0%, 
+        rgba(34, 197, 94, 0.05) 100%);
+    box-shadow: 
+        0 8px 28px rgba(34, 197, 94, 0.25),
+        0 0 0 1px rgba(34, 197, 94, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-btn[data-difficulty="easy"] .difficulty-name {
+    background: linear-gradient(135deg, var(--accent), #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Medium Button */
+.difficulty-btn[data-difficulty="medium"] {
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.difficulty-btn[data-difficulty="medium"]:hover {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 
+        0 12px 32px rgba(245, 158, 11, 0.12),
+        0 0 0 1px rgba(245, 158, 11, 0.1);
+}
+
+.difficulty-btn[data-difficulty="medium"].selected {
+    border-color: var(--warning);
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.15) 0%, 
+        rgba(245, 158, 11, 0.05) 100%);
+    box-shadow: 
+        0 8px 28px rgba(245, 158, 11, 0.25),
+        0 0 0 1px rgba(245, 158, 11, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-btn[data-difficulty="medium"] .difficulty-name {
+    background: linear-gradient(135deg, var(--warning), #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hard Button */
+.difficulty-btn[data-difficulty="hard"] {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.difficulty-btn[data-difficulty="hard"]:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 
+        0 12px 32px rgba(239, 68, 68, 0.12),
+        0 0 0 1px rgba(239, 68, 68, 0.1);
+}
+
+.difficulty-btn[data-difficulty="hard"].selected {
+    border-color: var(--danger);
+    background: linear-gradient(135deg, 
+        rgba(239, 68, 68, 0.15) 0%, 
+        rgba(239, 68, 68, 0.05) 100%);
+    box-shadow: 
+        0 8px 28px rgba(239, 68, 68, 0.25),
+        0 0 0 1px rgba(239, 68, 68, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-btn[data-difficulty="hard"] .difficulty-name {
+    background: linear-gradient(135deg, var(--danger), #f87171);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Selected state animation */
+.difficulty-btn.selected {
+    transform: translateY(-2px);
+}
+
+.difficulty-btn.selected::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 2px;
+    border-radius: 2px;
+    animation: selectedGlow 2s ease-in-out infinite;
+}
+
+.difficulty-btn[data-difficulty="easy"].selected::after {
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+}
+
+.difficulty-btn[data-difficulty="medium"].selected::after {
+    background: var(--warning);
+    box-shadow: 0 0 12px var(--warning);
+}
+
+.difficulty-btn[data-difficulty="hard"].selected::after {
+    background: var(--danger);
+    box-shadow: 0 0 12px var(--danger);
+}
+
+@keyframes selectedGlow {
+    0%, 100% { opacity: 0.6; width: 40%; }
+    50% { opacity: 1; width: 60%; }
+}
+
+.difficulty-name {
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.difficulty-btn.selected .difficulty-name {
+    transform: scale(1.05);
+}
+
+.difficulty-desc {
+    font-size: clamp(0.68rem, 1.2vw, 0.75rem);
+    color: var(--text-muted);
+    font-weight: 500;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.difficulty-btn:hover .difficulty-desc,
+.difficulty-btn.selected .difficulty-desc {
+    opacity: 1;
+}
+
+/* Light theme */
+body.light-theme .difficulty-btn {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.5) 100%);
+    border-color: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .difficulty-btn:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Light theme adjustments */
+body.light-theme .difficulty-btn {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.7) 0%, 
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0.6) 100%);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .difficulty-btn[data-difficulty="easy"] {
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.15) 0%, 
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(34, 197, 94, 0.1) 100%);
+}
+
+body.light-theme .difficulty-btn[data-difficulty="medium"] {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.15) 0%, 
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(245, 158, 11, 0.1) 100%);
+}
+
+body.light-theme .difficulty-btn[data-difficulty="hard"] {
+    background: linear-gradient(135deg, 
+        rgba(239, 68, 68, 0.15) 0%, 
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(239, 68, 68, 0.1) 100%);
+}
+
+/* Difficulty Indicator in Game Header */
+.difficulty-indicator .stat-value {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    text-transform: capitalize;
+}
+
+.difficulty-indicator.easy .stat-value {
+    background: linear-gradient(135deg, var(--accent), #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.difficulty-indicator.medium .stat-value {
+    background: linear-gradient(135deg, var(--warning), #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.difficulty-indicator.hard .stat-value {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .start-btn {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
@@ -311,6 +604,21 @@ body::before {
     text-transform: uppercase;
 }
 
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.2);
+}
+
+.start-btn:disabled:hover {
+    transform: none;
+}
+
+.start-btn:disabled::before {
+    display: none;
+}
+
 .start-btn::before {
     content: '';
     position: absolute;
@@ -322,11 +630,11 @@ body::before {
     transition: left 0.6s ease;
 }
 
-.start-btn:hover::before {
+.start-btn:not(:disabled):hover::before {
     left: 100%;
 }
 
-.start-btn:hover {
+.start-btn:not(:disabled):hover {
     transform: translateY(-5px) scale(1.05);
     box-shadow: 
         0 25px 60px rgba(168, 85, 247, 0.5),
@@ -1088,7 +1396,9 @@ body.light-theme .theme-toggle-thumb {
     }
 
     .stats {
-        gap: 15px;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .stat-item {
@@ -1136,6 +1446,27 @@ body.light-theme .theme-toggle-thumb {
         width: 220px;
         height: 220px;
     }
+    
+    .difficulty-buttons {
+        gap: 10px;
+    }
+    
+    .difficulty-btn {
+        padding: 12px 20px;
+        min-width: 100px;
+    }
+    
+    .difficulty-icon {
+        font-size: 1.3rem;
+    }
+    
+    .difficulty-name {
+        font-size: 0.9rem;
+    }
+    
+    .difficulty-desc {
+        font-size: 0.65rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1145,7 +1476,7 @@ body.light-theme .theme-toggle-thumb {
     }
 
     .bubble-content {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
 
     .instructions {
@@ -1167,5 +1498,38 @@ body.light-theme .theme-toggle-thumb {
 
     .timer-section {
         padding: 0 15px;
+    }
+    
+    .difficulty-buttons {
+        gap: 8px;
+    }
+    
+    .difficulty-btn {
+        padding: 10px 16px;
+        min-width: 90px;
+    }
+    
+    .difficulty-icon {
+        font-size: 1.2rem;
+    }
+    
+    .difficulty-name {
+        font-size: 0.85rem;
+    }
+    
+    .difficulty-desc {
+        font-size: 0.6rem;
+    }
+    
+    .stat-item {
+        padding: 6px 12px;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .difficulty-indicator .stat-value {
+        font-size: 0.85rem;
     }
 }

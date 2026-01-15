@@ -45,7 +45,25 @@
                 </div>
             </div>
             
-            <button class="start-btn" id="startBtn"><span class="btn-icon">▶</span> Start Test</button>
+            <div class="difficulty-section">
+                <div class="difficulty-label">Select Difficulty</div>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy">
+                        <span class="difficulty-name">Easy</span>
+                        <span class="difficulty-desc">Whole numbers</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="medium">
+                        <span class="difficulty-name">Medium</span>
+                        <span class="difficulty-desc">Fractions</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="hard">
+                        <span class="difficulty-name">Hard</span>
+                        <span class="difficulty-desc">Square roots</span>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="startBtn" disabled><span class="btn-icon">▶</span> Start Test</button>
         </div>
 
         <!-- Countdown Screen -->
@@ -66,6 +84,10 @@
                     <div class="stat-item">
                         <div class="stat-label">Score</div>
                         <div class="stat-value" id="currentScore">0</div>
+                    </div>
+                    <div class="stat-item difficulty-indicator">
+                        <div class="stat-label">Difficulty</div>
+                        <div class="stat-value" id="difficultyDisplay">Easy</div>
                     </div>
                 </div>
                 <button class="exit-btn" id="exitBtn">✕ Exit Test</button>

@@ -60,6 +60,10 @@
                         <span class="difficulty-name">Hard</span>
                         <span class="difficulty-desc">Square roots</span>
                     </button>
+                    <button class="difficulty-btn" data-difficulty="realtest">
+                        <span class="difficulty-name">Real Test</span>
+                        <span class="difficulty-desc">Mixed difficulty</span>
+                    </button>
                 </div>
             </div>
             
@@ -102,6 +106,8 @@
 
             <div class="instruction-text">Click in <strong>ascending order</strong> based on the result</div>
 
+            <div class="question-difficulty-badge" id="questionDifficultyBadge"></div>
+
             <div class="bubbles-container" id="bubblesContainer">
                 <!-- Bubbles will be generated here -->
             </div>
@@ -112,6 +118,10 @@
             <div class="result-badge">✅ Assessment Complete</div>
             <div class="result-title">Test Complete!</div>
             <div class="result-subtitle">Here's how you performed</div>
+            <div class="result-difficulty-badge" id="resultDifficultyBadge">
+                <span class="difficulty-icon">📊</span>
+                <span class="difficulty-text">Difficulty: <strong id="resultDifficulty">Easy</strong></span>
+            </div>
             
             <div class="result-card">
                 <div class="result-score" id="finalScore">0</div>
@@ -134,7 +144,7 @@
                 </div>
             </div>
             
-            <button class="restart-btn" id="restartBtn"><span class="btn-icon">🔄</span> Restart Test</button>
+            <button class="restart-btn" id="restartBtn"><span class="btn-icon restart-icon">↻</span> Restart Test</button>
         </div>
     </div>
 

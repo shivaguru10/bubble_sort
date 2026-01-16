@@ -68,6 +68,8 @@ let correctAnswers = 0;
 let wrongAnswers = 0;
 let skippedAnswers = 0;
 let selectedDifficulty = null;
+let realTestQuestionPool = [];
+let currentQuestionDifficulty = null;
 
 // DOM Elements
 const startScreen = document.getElementById('startScreen');
@@ -302,8 +304,8 @@ function generateHardExpression() {
 // ============================================
 // Expression Generator based on difficulty
 // ============================================
-function generateExpression() {
-    switch (selectedDifficulty) {
+function generateExpression(difficulty = selectedDifficulty) {
+    switch (difficulty) {
         case 'easy':
             return generateEasyExpression();
         case 'medium':
@@ -315,7 +317,28 @@ function generateExpression() {
     }
 }
 
-function generateUniqueBubbles() {
+// ============================================
+// Real Test Question Pool Generator
+// ============================================
+function generateRealTestPool() {
+    const pool = [];
+    const difficulties = ['easy', 'medium', 'hard'];
+    
+    // Generate 8 questions for each difficulty in order
+    // First 8 Easy, then 8 Medium, then 8 Hard
+    difficulties.forEach(difficulty => {
+        for (let i = 0; i < 8; i++) {
+            pool.push({
+                difficulty: difficulty,
+                index: pool.length
+            });
+        }
+    });
+    
+    return pool;
+}
+
+function generateUniqueBubbles(difficulty = selectedDifficulty) {
     const bubbles = [];
     const usedResults = new Set();
     const tolerance = 0.001; // For floating point comparison
@@ -334,7 +357,7 @@ function generateUniqueBubbles() {
     
     while (bubbles.length < 3 && attempts < maxAttempts) {
         attempts++;
-        const bubble = generateExpression();
+        const bubble = generateExpression(difficulty);
         if (!isResultUsed(bubble.result)) {
             usedResults.add(bubble.result);
             bubbles.push(bubble);
@@ -343,7 +366,7 @@ function generateUniqueBubbles() {
     
     // Fallback if we couldn't generate unique bubbles
     while (bubbles.length < 3) {
-        const bubble = generateExpression();
+        const bubble = generateExpression(difficulty);
         bubbles.push(bubble);
     }
 
@@ -399,9 +422,19 @@ function startGame() {
     wrongAnswers = 0;
     skippedAnswers = 0;
     questionsAttempted = 0;
+    currentQuestionDifficulty = null;
+    
+    // Initialize Real Test pool if needed
+    if (selectedDifficulty === 'realtest') {
+        realTestQuestionPool = generateRealTestPool();
+    } else {
+        realTestQuestionPool = [];
+    }
     
     // Update difficulty display
-    difficultyDisplay.textContent = selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1);
+    const displayName = selectedDifficulty === 'realtest' ? 'Real Test' : 
+        selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1);
+    difficultyDisplay.textContent = displayName;
     difficultyIndicator.className = 'stat-item difficulty-indicator ' + selectedDifficulty;
     
     showScreen(gameScreen);
@@ -416,11 +449,35 @@ function loadNextQuestion() {
 
     currentQuestion++;
     selectedBubbles = [];
-    currentBubbles = generateUniqueBubbles();
+    
+    // Handle Real Test mode - get difficulty from pool
+    if (selectedDifficulty === 'realtest') {
+        const questionInfo = realTestQuestionPool[currentQuestion - 1];
+        currentQuestionDifficulty = questionInfo.difficulty;
+        currentBubbles = generateUniqueBubbles(currentQuestionDifficulty);
+    } else {
+        currentQuestionDifficulty = selectedDifficulty;
+        currentBubbles = generateUniqueBubbles();
+    }
     
     updateUI();
+    updateQuestionDifficultyBadge();
     renderBubbles();
     startTimer();
+}
+
+// Update the question difficulty badge
+function updateQuestionDifficultyBadge() {
+    const badge = document.getElementById('questionDifficultyBadge');
+    
+    if (selectedDifficulty === 'realtest' && currentQuestionDifficulty) {
+        const difficultyLabel = currentQuestionDifficulty.charAt(0).toUpperCase() + currentQuestionDifficulty.slice(1);
+        badge.innerHTML = `<span class="badge ${currentQuestionDifficulty}">${difficultyLabel}</span>`;
+        badge.classList.add('visible');
+    } else {
+        badge.innerHTML = '';
+        badge.classList.remove('visible');
+    }
 }
 
 function updateUI() {
@@ -554,6 +611,20 @@ function endGame() {
         ? Math.round((correctAnswers / questionsAttempted) * 100) 
         : 0;
     document.getElementById('accuracy').textContent = `${accuracyValue}%`;
+
+    // Display the difficulty played
+    const difficultyNames = {
+        'easy': 'Easy',
+        'medium': 'Medium',
+        'hard': 'Hard',
+        'realtest': 'Real Test'
+    };
+    const resultDifficultyEl = document.getElementById('resultDifficulty');
+    const resultDifficultyBadge = document.getElementById('resultDifficultyBadge');
+    if (resultDifficultyEl && selectedDifficulty) {
+        resultDifficultyEl.textContent = difficultyNames[selectedDifficulty] || selectedDifficulty;
+        resultDifficultyBadge.className = `result-difficulty-badge difficulty-${selectedDifficulty}`;
+    }
 }
 
 function exitGame() {
@@ -570,11 +641,20 @@ function resetGame() {
     questionsAttempted = 0;
     selectedBubbles = [];
     currentBubbles = [];
+    realTestQuestionPool = [];
+    currentQuestionDifficulty = null;
     
     // Reset difficulty selection
     selectedDifficulty = null;
     difficultyBtns.forEach(b => b.classList.remove('selected'));
     startBtn.disabled = true;
+    
+    // Hide question difficulty badge
+    const badge = document.getElementById('questionDifficultyBadge');
+    if (badge) {
+        badge.classList.remove('visible');
+        badge.innerHTML = '';
+    }
     
     showScreen(startScreen);
 }

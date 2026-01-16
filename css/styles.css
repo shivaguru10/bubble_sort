@@ -482,6 +482,41 @@ body::before {
     box-shadow: 0 0 12px var(--danger);
 }
 
+/* Real Test Button */
+.difficulty-btn[data-difficulty="realtest"] {
+    border-color: rgba(168, 85, 247, 0.2);
+}
+
+.difficulty-btn[data-difficulty="realtest"]:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 
+        0 12px 32px rgba(168, 85, 247, 0.12),
+        0 0 0 1px rgba(168, 85, 247, 0.1);
+}
+
+.difficulty-btn[data-difficulty="realtest"].selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, 
+        rgba(168, 85, 247, 0.15) 0%, 
+        rgba(99, 102, 241, 0.05) 100%);
+    box-shadow: 
+        0 8px 28px rgba(168, 85, 247, 0.25),
+        0 0 0 1px rgba(168, 85, 247, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-btn[data-difficulty="realtest"] .difficulty-name {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.difficulty-btn[data-difficulty="realtest"].selected::after {
+    background: var(--primary);
+    box-shadow: 0 0 12px var(--primary);
+}
+
 @keyframes selectedGlow {
     0%, 100% { opacity: 0.6; width: 40%; }
     50% { opacity: 1; width: 60%; }
@@ -582,6 +617,64 @@ body.light-theme .difficulty-btn[data-difficulty="hard"] {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.difficulty-indicator.realtest .stat-value {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Question Difficulty Badge */
+.question-difficulty-badge {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.question-difficulty-badge.visible {
+    display: flex;
+}
+
+.question-difficulty-badge .badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: badgeFadeIn 0.3s ease;
+}
+
+@keyframes badgeFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question-difficulty-badge .badge.easy {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.question-difficulty-badge .badge.medium {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.question-difficulty-badge .badge.hard {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .start-btn {
@@ -1113,8 +1206,52 @@ body.light-theme .difficulty-btn[data-difficulty="hard"] {
 .result-subtitle {
     font-size: clamp(0.95rem, 2vw, 1.1rem);
     color: var(--text-secondary);
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     animation: resultTitleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* Result Difficulty Badge */
+.result-difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    animation: resultTitleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.result-difficulty-badge .difficulty-icon {
+    font-size: 1.1rem;
+}
+
+.result-difficulty-badge.difficulty-easy {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.result-difficulty-badge.difficulty-medium {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+}
+
+.result-difficulty-badge.difficulty-hard {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.result-difficulty-badge.difficulty-realtest {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(99, 102, 241, 0.05));
+    border-color: rgba(168, 85, 247, 0.3);
+    color: #a855f7;
 }
 
 .result-card {
@@ -1258,6 +1395,18 @@ body.light-theme .difficulty-btn[data-difficulty="hard"] {
     position: relative;
     overflow: hidden;
     animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.restart-btn .restart-icon {
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-right: 6px;
+}
+
+.restart-btn:hover .restart-icon {
+    transform: rotate(360deg);
 }
 
 .restart-btn::before {

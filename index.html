@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bubble Math - Cognitive Assessment</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/screens.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <!-- Floating Particles -->
@@ -46,7 +52,7 @@
             </div>
             
             <div class="difficulty-section">
-                <div class="difficulty-label">Select Difficulty</div>
+                <div class="difficulty-label">Select Mode</div>
                 <div class="difficulty-buttons">
                     <button class="difficulty-btn" data-difficulty="easy">
                         <span class="difficulty-name">Easy</span>
@@ -62,7 +68,7 @@
                     </button>
                     <button class="difficulty-btn" data-difficulty="realtest">
                         <span class="difficulty-name">Real Test</span>
-                        <span class="difficulty-desc">Mixed difficulty</span>
+                        <span class="difficulty-desc">Mixed</span>
                     </button>
                 </div>
             </div>
@@ -90,7 +96,7 @@
                         <div class="stat-value" id="currentScore">0</div>
                     </div>
                     <div class="stat-item difficulty-indicator">
-                        <div class="stat-label">Difficulty</div>
+                        <div class="stat-label">Mode</div>
                         <div class="stat-value" id="difficultyDisplay">Easy</div>
                     </div>
                 </div>
@@ -120,7 +126,7 @@
             <div class="result-subtitle">Here's how you performed</div>
             <div class="result-difficulty-badge" id="resultDifficultyBadge">
                 <span class="difficulty-icon">📊</span>
-                <span class="difficulty-text">Difficulty: <strong id="resultDifficulty">Easy</strong></span>
+                <span class="difficulty-text">Mode: <strong id="resultDifficulty">Easy</strong></span>
             </div>
             
             <div class="result-card">

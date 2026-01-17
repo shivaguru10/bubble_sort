@@ -9,13 +9,14 @@ export const Dashboard: React.FC = () => {
     {
       id: 'bubbles',
       title: 'Bubble Sort Game',
-      description: 'Arrange bubbles in the correct order by swapping adjacent elements. Test your sorting algorithm understanding!',
+      description: 'Sort the bubbles in ascending order by clicking on them. Test your pattern recognition skills!',
       icon: Gamepad2,
       color: 'from-blue-600 to-cyan-600',
       borderColor: 'border-blue-500/30 hover:border-blue-400',
       difficulty: 'Medium',
       time: '5 min',
-      path: '/game/bubbles',
+      path: '/bubble_sort/bubble/index.html',
+      isExternal: true, // Original HTML game
     },
     {
       id: 'path',
@@ -27,8 +28,17 @@ export const Dashboard: React.FC = () => {
       difficulty: 'Hard',
       time: '4 min',
       path: '/game/path',
+      isExternal: false,
     },
   ];
+
+  const handleGameClick = (game: typeof games[0]) => {
+    if (game.isExternal) {
+      window.location.href = game.path;
+    } else {
+      navigate(game.path);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 text-white">
@@ -68,7 +78,7 @@ export const Dashboard: React.FC = () => {
           {games.map((game) => (
             <div
               key={game.id}
-              onClick={() => navigate(game.path)}
+              onClick={() => handleGameClick(game)}
               className={`group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-8 border ${game.borderColor} transition-all cursor-pointer hover:scale-105 hover:shadow-2xl`}
             >
               <div className={`w-16 h-16 bg-gradient-to-br ${game.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>

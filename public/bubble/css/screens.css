@@ -11,7 +11,8 @@
     min-height: 90vh;
     max-width: 900px;
     margin: 0 auto;
-    padding: 20px 15px;
+    padding: 15px 15px;
+    gap: 6px;
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -113,7 +114,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 85vh;
+    min-height: auto;
     max-width: 900px;
     margin: 0 auto;
     padding: 20px 15px;
@@ -136,7 +137,7 @@
 }
 
 .result-title {
-    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-size: clamp(1.8rem, 4.5vw, 2.2rem);
     font-weight: 800;
     margin-bottom: 6px;
     background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--secondary) 100%);
@@ -157,12 +158,12 @@
     background: linear-gradient(135deg, var(--glass-bg), rgba(168, 85, 247, 0.05));
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 30px 50px;
+    border-radius: 20px;
+    padding: 20px 40px;
     border: 1px solid var(--glass-border);
-    margin-bottom: 25px;
+    margin-bottom: 18px;
     box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.25),
+        0 20px 40px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         var(--shadow-glow);
     animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
@@ -181,7 +182,7 @@
 }
 
 .result-score {
-    font-size: clamp(3.5rem, 10vw, 4.5rem);
+    font-size: clamp(3rem, 8vw, 3.8rem);
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
@@ -192,16 +193,23 @@
 }
 
 .result-total {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     color: var(--text-muted);
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     font-weight: 500;
 }
 
+.result-stats {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .result-accuracy {
-    font-size: clamp(1rem, 2.2vw, 1.1rem);
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     color: var(--text-secondary);
-    padding: 10px 26px;
+    padding: 8px 20px;
     background: rgba(34, 197, 94, 0.1);
     border-radius: 50px;
     border: 1px solid rgba(34, 197, 94, 0.2);
@@ -211,32 +219,48 @@
 .result-accuracy span {
     color: var(--accent);
     font-weight: 800;
-    font-size: clamp(1.2rem, 2.8vw, 1.4rem);
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+}
+
+.result-avg-time {
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: inline-block;
+}
+
+.result-avg-time span {
+    color: var(--secondary);
+    font-weight: 800;
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
 }
 
 .result-details {
     display: flex;
-    gap: 30px;
-    margin-top: 22px;
-    padding-top: 22px;
+    gap: 20px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid var(--glass-border);
 }
 
 .result-detail {
     text-align: center;
-    padding: 12px 18px;
+    padding: 10px 14px;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 14px;
+    border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .result-detail:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background: rgba(255, 255, 255, 0.05);
 }
 
 .result-detail-value {
-    font-size: clamp(1.5rem, 3.5vw, 1.8rem);
+    font-size: clamp(1.3rem, 3vw, 1.5rem);
     font-weight: 800;
     background: linear-gradient(135deg, var(--secondary), var(--primary));
     -webkit-background-clip: text;

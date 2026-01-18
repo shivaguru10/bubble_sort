@@ -34,6 +34,26 @@ function loadThemePreference() {
 themeToggle.addEventListener('click', toggleTheme);
 loadThemePreference();
 
+// Dropdown Toggle for How to Play
+const dropdownToggle = document.getElementById('dropdownToggle');
+const dropdownContent = document.getElementById('dropdownContent');
+const dropdownArrow = document.getElementById('dropdownArrow');
+
+if (dropdownToggle && dropdownContent) {
+    dropdownToggle.addEventListener('click', () => {
+        dropdownContent.classList.toggle('show');
+        dropdownArrow.classList.toggle('open');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownToggle.contains(e.target) && !dropdownContent.contains(e.target)) {
+            dropdownContent.classList.remove('show');
+            dropdownArrow.classList.remove('open');
+        }
+    });
+}
+
 // Create floating particles
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
@@ -70,6 +90,8 @@ let skippedAnswers = 0;
 let selectedDifficulty = null;
 let realTestQuestionPool = [];
 let currentQuestionDifficulty = null;
+let totalTimeSpent = 0;
+let questionStartTime = 0;
 
 // DOM Elements
 const startScreen = document.getElementById('startScreen');
@@ -535,6 +557,10 @@ function handleBubbleClick(index) {
 function validateAnswer() {
     clearInterval(timerInterval);
     questionsAttempted++;
+    
+    // Track time spent on this question
+    const timeSpent = timePerQuestion - currentTime;
+    totalTimeSpent += timeSpent;
 
     // Get the correct order (indices sorted by result ascending)
     const correctOrder = [...currentBubbles]
@@ -586,6 +612,7 @@ function startTimer() {
 function handleTimeout() {
     questionsAttempted++;
     skippedAnswers++;
+    totalTimeSpent += timePerQuestion; // Full time spent on timeout
     
     // Disable all bubbles
     Array.from(bubblesContainer.children).forEach(bubble => {
@@ -611,6 +638,12 @@ function endGame() {
         ? Math.round((correctAnswers / questionsAttempted) * 100) 
         : 0;
     document.getElementById('accuracy').textContent = `${accuracyValue}%`;
+    
+    // Calculate and display average time
+    const avgTime = questionsAttempted > 0 
+        ? (totalTimeSpent / questionsAttempted).toFixed(1) 
+        : 0;
+    document.getElementById('avgTime').textContent = `${avgTime}s`;
 
     // Display the difficulty played
     const difficultyNames = {
@@ -643,6 +676,8 @@ function resetGame() {
     currentBubbles = [];
     realTestQuestionPool = [];
     currentQuestionDifficulty = null;
+    totalTimeSpent = 0;
+    questionStartTime = 0;
     
     // Reset difficulty selection
     selectedDifficulty = null;

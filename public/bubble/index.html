@@ -31,23 +31,29 @@
             <div class="logo">Bubble Math</div>
             <div class="subtitle">Ascending Order Challenge</div>
             
-            <div class="instructions">
-                <h3>📋 How to Play</h3>
-                <div class="instruction-item">
-                    <div class="instruction-icon">🔢</div>
-                    <span>You'll see <strong>3 bubbles</strong> with math expressions</span>
-                </div>
-                <div class="instruction-item">
-                    <div class="instruction-icon">⬆️</div>
-                    <span>Click bubbles in <strong>ASCENDING ORDER</strong> by result</span>
-                </div>
-                <div class="instruction-item">
-                    <div class="instruction-icon">⏱️</div>
-                    <span><strong>30 seconds</strong> per question · <strong>24 questions</strong> total</span>
-                </div>
-                <div class="instruction-item">
-                    <div class="instruction-icon">⭐</div>
-                    <span><strong>1 point</strong> for each correct answer</span>
+            <div class="instructions-dropdown">
+                <button class="dropdown-toggle" id="dropdownToggle" type="button">
+                    <span class="dropdown-icon">📋</span>
+                    <span>How to Play</span>
+                    <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+                </button>
+                <div class="dropdown-content" id="dropdownContent">
+                    <div class="instruction-item">
+                        <div class="instruction-icon">🔢</div>
+                        <span>You'll see <strong>3 bubbles</strong> with math expressions</span>
+                    </div>
+                    <div class="instruction-item">
+                        <div class="instruction-icon">⬆️</div>
+                        <span>Click bubbles in <strong>ASCENDING ORDER</strong> by result</span>
+                    </div>
+                    <div class="instruction-item">
+                        <div class="instruction-icon">⏱️</div>
+                        <span><strong>30 seconds</strong> per question · <strong>24 questions</strong> total</span>
+                    </div>
+                    <div class="instruction-item">
+                        <div class="instruction-icon">⭐</div>
+                        <span><strong>1 point</strong> for each correct answer</span>
+                    </div>
                 </div>
             </div>
             
@@ -121,9 +127,7 @@
 
         <!-- Result Screen -->
         <div class="result-screen" id="resultScreen">
-            <div class="result-badge">✅ Assessment Complete</div>
             <div class="result-title">Test Complete!</div>
-            <div class="result-subtitle">Here's how you performed</div>
             <div class="result-difficulty-badge" id="resultDifficultyBadge">
                 <span class="difficulty-icon">📊</span>
                 <span class="difficulty-text">Mode: <strong id="resultDifficulty">Easy</strong></span>
@@ -132,7 +136,10 @@
             <div class="result-card">
                 <div class="result-score" id="finalScore">0</div>
                 <div class="result-total">out of <span id="totalQuestions">24</span></div>
-                <div class="result-accuracy">Accuracy: <span id="accuracy">0%</span></div>
+                <div class="result-stats">
+                    <div class="result-accuracy">Accuracy: <span id="accuracy">0%</span></div>
+                    <div class="result-avg-time">Avg Time: <span id="avgTime">0s</span></div>
+                </div>
                 
                 <div class="result-details">
                     <div class="result-detail correct">
